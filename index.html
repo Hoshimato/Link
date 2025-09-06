@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Link - SNS</title>
+  <title>Link - ログイン</title>
   <!-- Kaisei Opti フォント -->
   <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&display=swap" rel="stylesheet">
   <style>
@@ -42,4 +42,45 @@
       border: none;
       border-radius: 12px;
       font-size: 1rem;
-      font
+      font-family: 'Kaisei Opti', serif;
+    }
+
+    input {
+      background: white;
+      color: #333;
+    }
+
+    button {
+      background: #2196f3;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1976d2;
+    }
+
+    p {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Link</h1>
+    <input type="email" placeholder="メールアドレス">
+    <input type="password" placeholder="パスワード">
+    <button>ログイン</button>
+    <p>アカウントをお持ちでない方は <a href="#">新規登録</a></p>
+  </div>
+</body>
+</html>
