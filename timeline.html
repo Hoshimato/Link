@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: 'Kaisei Opti', serif;
-      background: linear-gradient(135deg, #2196f3, #00bcd4); /* 青系背景 */
+      background: linear-gradient(135deg, #2196f3, #00bcd4);
       color: #333;
       margin: 0;
       padding: 2rem;
@@ -22,7 +22,6 @@
       margin-bottom: 2rem;
     }
 
-    /* 投稿入力欄 */
     .new-post {
       display: flex;
       justify-content: center;
@@ -56,22 +55,45 @@
       transform: translateY(-2px);
     }
 
-    /* 投稿カード */
-    .post {
-      background: #ffffff;       /* 中身白 */
-      color: #333333;            /* 文字黒 */
-      padding: 1rem;
-      border-radius: 16px;
-      margin-bottom: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-
-    /* スクロール用 */
     #posts {
       max-width: 600px;
       margin: auto;
     }
 
+    .post {
+      background: #ffffff;
+      color: #333;
+      padding: 1rem;
+      border-radius: 16px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin-right: 1rem;
+      object-fit: cover;
+    }
+
+    .post-content {
+      flex: 1;
+    }
+
+    .username {
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      color: #2196f3;
+    }
+
+    .timestamp {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      margin-top: 0.3rem;
+    }
   </style>
 </head>
 <body>
@@ -105,15 +127,42 @@
     async function fetchPosts() {
       const { data: posts, error } = await supabase
         .from('posts')
-        .select('*')
+        .select(`
+          id, content, created_at, user_id,
+          profiles(username, avatar_url)
+        `)
         .order('created_at', { ascending: false });
 
       const container = document.getElementById('posts');
       container.innerHTML = "";
+
       posts.forEach(post => {
         const div = document.createElement('div');
         div.className = "post";
-        div.innerText = post.content;
+
+        const avatar = document.createElement('img');
+        avatar.className = "avatar";
+        avatar.src = post.profiles.avatar_url || 'https://via.placeholder.com/48';
+        div.appendChild(avatar);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = "post-content";
+
+        const username = document.createElement('div');
+        username.className = "username";
+        username.innerText = post.profiles.username || "名無し";
+        contentDiv.appendChild(username);
+
+        const text = document.createElement('div');
+        text.innerText = post.content;
+        contentDiv.appendChild(text);
+
+        const timestamp = document.createElement('div');
+        timestamp.className = "timestamp";
+        timestamp.innerText = new Date(post.created_at).toLocaleString();
+        contentDiv.appendChild(timestamp);
+
+        div.appendChild(contentDiv);
         container.appendChild(div);
       });
     }
