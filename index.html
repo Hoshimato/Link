@@ -10,59 +10,67 @@
     body {
       margin: 0;
       font-family: 'Kaisei Opti', serif;
-      background: linear-gradient(135deg, #2196f3, #00bcd4);
-      color: white;
+      background: linear-gradient(135deg, #2196f3, #00bcd4); /* 青系背景 */
+      color: #333;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
+      background: #ffffff;  /* 白枠 */
       padding: 2rem;
+      border-radius: 20px;
       width: 90%;
       max-width: 400px;
       text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.25);
     }
+
     h1 {
       font-size: 2.2rem;
       margin-bottom: 1rem;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(255,255,255,0.6);
+      color: #2196f3;
+      text-shadow: 0 0 12px rgba(33,150,243,0.6);
     }
+
     input, button {
       width: 100%;
       padding: 0.8rem;
       margin: 0.5rem 0;
-      border: none;
       border-radius: 12px;
+      border: none;
       font-size: 1rem;
       font-family: 'Kaisei Opti', serif;
     }
+
     input {
-      background: white;
+      background: #f5f5f5;
       color: #333;
     }
+
     button {
       background: #2196f3;
-      color: white;
+      color: #fff;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
     }
+
     button:hover {
       background: #1976d2;
+      transform: translateY(-2px);
     }
+
     p {
       margin-top: 1rem;
       font-size: 0.9rem;
       opacity: 0.9;
     }
+
     a {
-      color: #fff;
+      color: #2196f3;
       text-decoration: underline;
       cursor: pointer;
     }
@@ -90,48 +98,5 @@
   </div>
 
   <script>
-    // 🚨 ここは本番では環境変数にする（GitHub Pagesで動かすなら直書きでもOK）
     const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // ログイン処理
-    async function login() {
-      const email = document.getElementById("login-email").value;
-      const password = document.getElementById("login-password").value;
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        alert("ログイン失敗: " + error.message);
-      } else {
-        alert("ログイン成功！ユーザーID: " + data.user.id);
-        // TODO: タイムライン画面に遷移させる
-      }
-    }
-
-    // 新規登録処理
-    async function signup() {
-      const email = document.getElementById("signup-email").value;
-      const password = document.getElementById("signup-password").value;
-      const { data, error } = await supabase.auth.signUp({ email, password });
-
-      if (error) {
-        alert("登録失敗: " + error.message);
-      } else {
-        alert("登録成功！確認メールをチェックしてください");
-        showLogin();
-      }
-    }
-
-    // 画面切り替え
-    function showSignup() {
-      document.getElementById("login-form").style.display = "none";
-      document.getElementById("signup-form").style.display = "block";
-    }
-    function showLogin() {
-      document.getElementById("signup-form").style.display = "none";
-      document.getElementById("login-form").style.display = "block";
-    }
-  </script>
-</body>
-</html>
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6Mj_
