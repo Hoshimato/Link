@@ -6,77 +6,68 @@
 <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
-  body { font-family:'Kaisei Opti', serif; margin:0; display:flex; justify-content:center; align-items:flex-start; min-height:100vh; background:linear-gradient(145deg,#6dd5ed,#2193b0); padding-top:2rem;}
-  .card { background:rgba(255,255,255,0.95); padding:2rem; border-radius:20px; width:90%; max-width:500px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.25); }
-  h1 { font-size:2rem; margin-bottom:1rem; color:#1e88e5; text-shadow:0 0 15px rgba(30,136,229,0.5); }
-  input, textarea, button { width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:14px; border:none; font-family:'Kaisei Opti', serif; }
-  input, textarea { background:#f0f0f0; color:#333; }
-  button { background:linear-gradient(135deg,#1e88e5,#42a5f5); color:#fff; font-weight:bold; cursor:pointer; }
-  button:hover { background:linear-gradient(135deg,#1565c0,#1e88e5); transform:translateY(-2px); }
-  label { font-weight:bold; margin-top:0.5rem; display:block; text-align:left; }
+body { font-family:'Kaisei Opti', serif; margin:0; display:flex; justify-content:center; align-items:flex-start; min-height:100vh; background:linear-gradient(145deg,#6dd5ed,#2193b0); padding-top:2rem;}
+.card { background:rgba(255,255,255,0.95); padding:2rem; border-radius:20px; width:90%; max-width:500px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.25); }
+h1 { font-size:2rem; margin-bottom:1rem; color:#1e88e5; text-shadow:0 0 15px rgba(30,136,229,0.5); }
+input, textarea, button { width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:14px; border:none; font-family:'Kaisei Opti', serif; }
+input, textarea { background:#f0f0f0; color:#333; }
+button { background:linear-gradient(135deg,#1e88e5,#42a5f5); color:#fff; font-weight:bold; cursor:pointer; }
+button:hover { background:linear-gradient(135deg,#1565c0,#1e88e5); transform:translateY(-2px); }
+label { font-weight:bold; margin-top:0.5rem; display:block; text-align:left; }
 </style>
 </head>
 <body>
-  <div class="card">
-    <h1>プロフィール編集</h1>
-    <label>ユーザー名</label>
-    <input type="text" id="username" placeholder="名前">
-    <label>自己紹介</label>
-    <textarea id="bio" rows="4" placeholder="自己紹介"></textarea>
-    <label>アイコンURL</label>
-    <input type="text" id="avatar_url" placeholder="画像URL">
-    <button onclick="saveProfile()">保存</button>
-    <button onclick="goTimeline()" style="margin-top:1rem; background:linear-gradient(135deg,#999,#bbb);">タイムラインに戻る</button>
-  </div>
+<div class="card">
+  <h1>プロフィール編集</h1>
+  <label>ユーザー名</label>
+  <input type="text" id="username" placeholder="名前">
+  <label>自己紹介</label>
+  <textarea id="bio" rows="4" placeholder="自己紹介"></textarea>
+  <label>アイコンURL</label>
+  <input type="text" id="avatar_url" placeholder="画像URL">
+  <button onclick="saveProfile()">保存</button>
+  <button onclick="goTimeline()" style="margin-top:1rem; background:linear-gradient(135deg,#999,#bbb);">タイムラインに戻る</button>
+</div>
 
-  <script>
-    const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
 
-    let currentUser = null;
+async function init() {
+  const { data: { user }, error } = await client.auth.getUser();
+  if (error || !user) { location.href="index.html"; return; }
+  currentUser = user;
+  loadProfile();
+}
 
-    async function init() {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error || !user) { location.href="index.html"; return; }
-      currentUser = user;
-      loadProfile();
-    }
+async function loadProfile() {
+  const { data } = await client
+    .from('profiles')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .single();
+  if(data){
+    document.getElementById('username').value = data.username || '';
+    document.getElementById('bio').value = data.bio || '';
+    document.getElementById('avatar_url').value = data.avatar_url || 'https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png';
+  } else {
+    document.getElementById('avatar_url').value = 'https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png';
+  }
+}
 
-    async function loadProfile() {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .single();
-      if (data) {
-        document.getElementById('username').value = data.username || '';
-        document.getElementById('bio').value = data.bio || '';
-        document.getElementById('avatar_url').value = data.avatar_url || '';
-      }
-    }
+async function saveProfile(){
+  const username = document.getElementById('username').value;
+  const bio = document.getElementById('bio').value;
+  const avatar_url = document.getElementById('avatar_url').value;
+  const { error } = await client.from('profiles').upsert([{ user_id: currentUser.id, username, bio, avatar_url }]);
+  if(error){ alert("保存できませんでした: "+error.message); } else { alert("保存しました！"); }
+}
 
-    async function saveProfile() {
-      const username = document.getElementById('username').value;
-      const bio = document.getElementById('bio').value;
-      const avatar_url = document.getElementById('avatar_url').value;
+function goTimeline(){ location.href="timeline.html"; }
 
-      const { error } = await supabase
-        .from('profiles')
-        .upsert([{ user_id: currentUser.id, username, bio, avatar_url }]);
-
-      if (error) {
-        alert("保存できませんでした: " + error.message);
-      } else {
-        alert("保存しました！");
-      }
-    }
-
-    function goTimeline() {
-      location.href="timeline.html";
-    }
-
-    init();
-  </script>
+init();
+</script>
 </body>
 </html>
