@@ -8,17 +8,23 @@
   <style>
     body {
       font-family: 'Kaisei Opti', serif;
-      background: linear-gradient(135deg, #2196f3, #00bcd4);
-      color: #333;
       margin: 0;
       padding: 2rem;
+      background: linear-gradient(145deg, #6dd5ed, #2193b0);
+      animation: bgMove 15s infinite alternate;
+      min-height: 100vh;
+    }
+
+    @keyframes bgMove {
+      0% {background-position: 0% 50%;}
+      100% {background-position: 100% 50%;}
     }
 
     h1 {
       text-align: center;
       color: #ffffff;
-      font-size: 2rem;
-      text-shadow: 0 0 12px rgba(255,255,255,0.6);
+      font-size: 2.4rem;
+      text-shadow: 0 0 15px rgba(255,255,255,0.6);
       margin-bottom: 2rem;
     }
 
@@ -26,32 +32,42 @@
       display: flex;
       justify-content: center;
       margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .new-post input {
       width: 70%;
-      padding: 0.6rem;
-      border-radius: 12px;
+      padding: 0.8rem;
+      border-radius: 14px;
       border: none;
       font-family: 'Kaisei Opti', serif;
       margin-right: 0.5rem;
-      background: #ffffff;
-      color: #333;
+      background: #f0f0f0;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+
+    .new-post input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(30,136,229,0.5);
     }
 
     .new-post button {
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      border-radius: 14px;
       border: none;
-      background: #2196f3;
+      background: linear-gradient(135deg, #1e88e5, #42a5f5);
       color: #fff;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 4px 15px rgba(30,136,229,0.4);
+      transition: all 0.2s;
     }
 
     .new-post button:hover {
-      background: #1976d2;
+      background: linear-gradient(135deg, #1565c0, #1e88e5);
       transform: translateY(-2px);
     }
 
@@ -61,12 +77,18 @@
     }
 
     .post {
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.95);
       color: #333;
       padding: 1rem;
-      border-radius: 16px;
+      border-radius: 20px;
       margin-bottom: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s;
+    }
+
+    .post:hover {
+      transform: translateY(-3px);
     }
 
     .content {
@@ -92,7 +114,7 @@
 
   <script>
     const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
+    const SUPABASE_KEY = "YOUR_KEY_HERE";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
