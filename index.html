@@ -25,7 +25,7 @@
     .card {
       background: rgba(255, 255, 255, 0.95);
       padding: 2rem;
-      border-radius: 24px;
+      border-radius: 20px;
       width: 90%;
       max-width: 400px;
       text-align: center;
@@ -96,6 +96,7 @@
   <div class="card">
     <h1>Link</h1>
 
+    <!-- ログインフォーム -->
     <div id="login-form">
       <input type="email" id="login-email" placeholder="メールアドレス">
       <input type="password" id="login-password" placeholder="パスワード">
@@ -103,6 +104,7 @@
       <p>アカウントをお持ちでない方は <a onclick="showSignup()">新規登録</a></p>
     </div>
 
+    <!-- 新規登録フォーム -->
     <div id="signup-form" style="display:none;">
       <input type="email" id="signup-email" placeholder="メールアドレス">
       <input type="password" id="signup-password" placeholder="パスワード">
@@ -113,9 +115,10 @@
 
   <script>
     const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
-    const SUPABASE_KEY = "YOUR_KEY_HERE";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk"; // anonキーを必ず入れる
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // フォーム切り替え
     function showSignup() {
       document.getElementById('login-form').style.display = 'none';
       document.getElementById('signup-form').style.display = 'block';
@@ -126,18 +129,32 @@
       document.getElementById('login-form').style.display = 'block';
     }
 
+    // ログイン
     async function login() {
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
+
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message); else alert('ログイン成功！');
+      if (error) {
+        alert("ログイン失敗: " + error.message);
+      } else {
+        alert("ログイン成功！");
+        location.href = "timeline.html";
+      }
     }
 
+    // 新規登録
     async function signup() {
       const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
+
       const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) alert(error.message); else alert('登録成功！');
+      if (error) {
+        alert("登録失敗: " + error.message);
+      } else {
+        alert("登録成功！ログインしてください");
+        showLogin();
+      }
     }
   </script>
 </body>
