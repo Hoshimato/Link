@@ -24,7 +24,7 @@ body {
   padding-top: 2rem;
 }
 
-/* Linkロゴボタン */
+/* プロフィールボタン */
 .logo-btn {
   width: 50px;
   height: 50px;
@@ -40,15 +40,14 @@ body {
 }
 
 .logo-btn img {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 50%;
 }
 
 .logo-btn:hover {
   transform: scale(1.1);
-  background: linear-gradient(135deg,#1565c0,#1e88e5);
 }
 
 /* メインタイムライン */
@@ -128,7 +127,7 @@ h1 {
 
 <div class="sidebar">
   <button class="logo-btn" onclick="goProfile()">
-    <img src="link-logo.png" alt="Link" />
+    <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png" alt="プロフィール" />
   </button>
 </div>
 
@@ -145,6 +144,7 @@ h1 {
 const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let currentUser = null;
 
 async function init() {
