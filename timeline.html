@@ -6,26 +6,130 @@
 <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
-  body { font-family: 'Kaisei Opti', serif; margin:0; min-height:100vh; display:flex; background: linear-gradient(145deg,#6dd5ed,#2193b0); }
-  .sidebar { width:120px; display:flex; flex-direction:column; padding:2rem 1rem; background: rgba(255,255,255,0.05); }
-  .sidebar button { margin-bottom:1rem; padding:0.8rem; border-radius:12px; border:none; background:linear-gradient(135deg,#1e88e5,#42a5f5); color:#fff; cursor:pointer; transition:0.2s; }
-  .sidebar button:hover { background:linear-gradient(135deg,#1565c0,#1e88e5); transform:translateY(-2px); }
-  .main { flex:1; padding:2rem; overflow-y:auto; }
-  h1 { text-align:center; color:#fff; font-size:2.4rem; text-shadow:0 0 15px rgba(255,255,255,0.6); margin-bottom:2rem; }
-  .new-post { display:flex; justify-content:center; margin-bottom:2rem; max-width:600px; margin-left:auto; margin-right:auto; }
-  .new-post input { width:70%; padding:0.8rem; border-radius:14px; border:none; margin-right:0.5rem; background:#f0f0f0; }
-  .new-post button { padding:0.8rem 1rem; border-radius:14px; border:none; background:linear-gradient(135deg,#1e88e5,#42a5f5); color:#fff; font-weight:bold; cursor:pointer; }
-  .new-post button:hover { background:linear-gradient(135deg,#1565c0,#1e88e5); transform:translateY(-2px); }
-  #posts { max-width:600px; margin:auto; }
-  .post { background: rgba(255,255,255,0.95); color:#333; padding:1rem; border-radius:20px; margin-bottom:1rem; box-shadow:0 8px 20px rgba(0,0,0,0.25); }
-  .content { margin-bottom:0.5rem; }
-  .timestamp { font-size:0.75rem; opacity:0.6; text-align:right; }
+body {
+  font-family: 'Kaisei Opti', serif;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(145deg,#6dd5ed,#2193b0);
+}
+
+/* サイドバー */
+.sidebar {
+  width: 70px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+/* Linkロゴボタン */
+.logo-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  padding: 5px;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.logo-btn img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.logo-btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg,#1565c0,#1e88e5);
+}
+
+/* メインタイムライン */
+.main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 2.4rem;
+  text-shadow: 0 0 15px rgba(255,255,255,0.6);
+  margin-bottom: 2rem;
+}
+
+.new-post {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.new-post input {
+  width: 70%;
+  padding: 0.8rem;
+  border-radius: 14px;
+  border: none;
+  margin-right: 0.5rem;
+  background: #f0f0f0;
+}
+
+.new-post button {
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg,#1e88e5,#42a5f5);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.new-post button:hover {
+  background: linear-gradient(135deg,#1565c0,#1e88e5);
+  transform: translateY(-2px);
+}
+
+#posts {
+  max-width: 600px;
+  margin: auto;
+}
+
+.post {
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  padding: 1rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.content {
+  margin-bottom: 0.5rem;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  text-align: right;
+}
 </style>
 </head>
 <body>
 
 <div class="sidebar">
-  <button onclick="goProfile()">プロフィール</button>
+  <button class="logo-btn" onclick="goProfile()">
+    <img src="link-logo.png" alt="Link" />
+  </button>
 </div>
 
 <div class="main">
@@ -40,18 +144,18 @@
 <script>
 const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 
 async function init() {
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const { data: { user }, error } = await client.auth.getUser();
   if (error || !user) { location.href = "index.html"; return; }
   currentUser = user;
   fetchPosts();
 }
 
 async function fetchPosts() {
-  const { data: posts, error } = await supabase.from('posts').select('id, content, created_at').order('created_at',{ascending:false});
+  const { data: posts, error } = await client.from('posts').select('id, content, created_at').order('created_at',{ascending:false});
   const container = document.getElementById('posts');
   container.innerHTML = "";
   if(error){ container.innerHTML="<p style='color:white;'>投稿を取得できませんでした</p>"; return; }
@@ -67,7 +171,7 @@ async function fetchPosts() {
 async function createPost(){
   const content=document.getElementById('post-input').value;
   if(!content) return;
-  const { error } = await supabase.from('posts').insert([{user_id:currentUser.id, content}]);
+  const { error } = await client.from('posts').insert([{user_id:currentUser.id, content}]);
   if(error){ alert("投稿できませんでした: "+error.message); } else { document.getElementById('post-input').value=""; fetchPosts(); }
 }
 
