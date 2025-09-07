@@ -125,6 +125,7 @@
     }
 
     async function fetchPosts() {
+      // profiles テーブルが存在しなくても動くように安全に書く
       const { data: posts, error } = await supabase
         .from('posts')
         .select(`
@@ -133,24 +134,38 @@
         `)
         .order('created_at', { ascending: false });
 
+      console.log("posts:", posts, "error:", error);
+
       const container = document.getElementById('posts');
       container.innerHTML = "";
+
+      if (error) {
+        container.innerHTML = "<p style='color:white;'>投稿を取得できませんでした: " + error.message + "</p>";
+        return;
+      }
+
+      if (!posts || posts.length === 0) {
+        container.innerHTML = "<p style='color:white;'>まだ投稿がありません</p>";
+        return;
+      }
 
       posts.forEach(post => {
         const div = document.createElement('div');
         div.className = "post";
 
+        // アバター
         const avatar = document.createElement('img');
         avatar.className = "avatar";
-        avatar.src = post.profiles.avatar_url || 'https://via.placeholder.com/48';
+        avatar.src = post.profiles?.avatar_url || 'https://via.placeholder.com/48';
         div.appendChild(avatar);
 
+        // コンテンツ部分
         const contentDiv = document.createElement('div');
         contentDiv.className = "post-content";
 
         const username = document.createElement('div');
         username.className = "username";
-        username.innerText = post.profiles.username || "名無し";
+        username.innerText = post.profiles?.username || "名無し";
         contentDiv.appendChild(username);
 
         const text = document.createElement('div');
@@ -171,7 +186,7 @@
       const content = document.getElementById('post-input').value;
       if (!content) return;
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('posts')
         .insert([{ user_id: currentUser.id, content }]);
 
