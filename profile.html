@@ -39,7 +39,7 @@ async function init() {
   const { data: { user }, error } = await client.auth.getUser();
   if (error || !user) { location.href="index.html"; return; }
   currentUser = user;
-  loadProfile();
+  await loadProfile();
 }
 
 async function loadProfile() {
@@ -48,21 +48,28 @@ async function loadProfile() {
     .select('*')
     .eq('user_id', currentUser.id)
     .single();
-  if(data){
-    document.getElementById('username').value = data.username || '';
-    document.getElementById('bio').value = data.bio || '';
-    document.getElementById('avatar_url').value = data.avatar_url || 'https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png';
-  } else {
-    document.getElementById('avatar_url').value = 'https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png';
-  }
+  
+  document.getElementById('username').value = data?.username || '';
+  document.getElementById('bio').value = data?.bio || '';
+  document.getElementById('avatar_url').value = data?.avatar_url || 'https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png';
 }
 
-async function saveProfile(){
+async function saveProfile() {
   const username = document.getElementById('username').value;
   const bio = document.getElementById('bio').value;
   const avatar_url = document.getElementById('avatar_url').value;
-  const { error } = await client.from('profiles').upsert([{ user_id: currentUser.id, username, bio, avatar_url }]);
-  if(error){ alert("保存できませんでした: "+error.message); } else { alert("保存しました！"); }
+
+  try {
+    const { data, error } = await client.from('profiles').upsert([
+      { user_id: currentUser.id, username, bio, avatar_url }
+    ]);
+    if (error) throw error;
+    alert("保存しました！");
+    console.log("保存データ:", data);
+  } catch (e) {
+    console.error(e);
+    alert("保存できませんでした: " + e.message);
+  }
 }
 
 function goTimeline(){ location.href="timeline.html"; }
