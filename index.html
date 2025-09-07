@@ -112,10 +112,10 @@
   </div>
 
   <script>
-    // Supabase クライアント作成（キー組み込み済み）
+    // Supabase 初期化（キー組み込み済み）
     const SUPABASE_URL = "https://xjrnuewonpzjzudxwojk.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqcm51ZXdvbnB6anp1ZHh3b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzU4MzksImV4cCI6MjA3MjcxMTgzOX0.ZZFX4rufOUFOmo0HptF0Atw5v6QJd5Utk2c7voUlYRk";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // フォーム切替
     function showSignup() {
@@ -134,7 +134,7 @@
       const password = document.getElementById('login-password').value;
 
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
         if (error) throw error;
         location.href = "timeline.html";
       } catch (err) {
@@ -149,7 +149,7 @@
       const password = document.getElementById('signup-password').value;
 
       try {
-        const { data, error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await client.auth.signUp({ email, password });
         if (error) throw error;
         alert("登録成功！ログインしてください");
         showLogin();
